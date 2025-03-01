@@ -1,7 +1,8 @@
+import logging
+import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.const import CONF_HOST, CONF_NAME
-import logging
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,6 +22,10 @@ class CarPlateRecognitionConfigFlow(config_entries.ConfigFlow):
             self.host = user_input[CONF_HOST]
             self.code_project_host = user_input['code_project_host']
             self.cameras = user_input['cameras']
+
+            # Check if the host is valid or reachable (optional step)
+            # You can add a validation here to test the connection to Frigate or Code AI Project host.
+
             return self.async_create_entry(
                 title="Car Plate Recognition",
                 data={
@@ -29,11 +34,13 @@ class CarPlateRecognitionConfigFlow(config_entries.ConfigFlow):
                     'cameras': self.cameras
                 }
             )
+
+        # Show the configuration form
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({
                 vol.Required(CONF_HOST): str,
                 vol.Required('code_project_host'): str,
-                vol.Required('cameras'): list,
+                vol.Required('cameras'): vol.All(vol.ensure_list, [str]),
             })
         )
