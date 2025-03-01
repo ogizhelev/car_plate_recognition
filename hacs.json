@@ -1,0 +1,5 @@
+{
+    "name": "car_plate_recognition",
+    "render_readme": true,
+    "country": ["BG"]
+}
